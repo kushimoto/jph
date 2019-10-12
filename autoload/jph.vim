@@ -97,6 +97,11 @@ endfunction
 
 function! jph#initialCodeInsert()
 
+	"開いているファイル名を取得
+	let s:FileName = expand("%")
+	"フルパス取得(ファイル名含む)
+	let s:FilePath = expand("%:p")
+
 	" 新規ファイルの場合バッファしか存在せずファイル容量の確認ができないので保存して誤作動をさける。
 	execute 'w'
 
