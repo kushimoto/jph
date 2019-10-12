@@ -15,10 +15,10 @@ call dein#add('kushimoto/jph')
 ```viml
 
 " 下半分をターミナルウィンドウにする場合
-let g:window_setting = 1
+let g:jph#window_setting = 1
 
 " 既に下半分をターミナルウィンドウにする設定を施している場合
-let g:window_setting = 0
+let g:jph#window_setting = 0
 ```
 コマンド
 ```viml
