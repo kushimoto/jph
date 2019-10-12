@@ -35,7 +35,7 @@ function! jph#main()
 	if jph#init() == 0
 
 		" カレントバッファが workYY.java かどうか確認
-		let WorkJavaFileName = "work\d\{1,2}\.java"
+		let WorkJavaFileName = 'work\d\{1,2}\.java'
 		if match(s:FileName, WorkJavaFileName) == 0
 			" javac コマンドを準備
 			let JavaCompile = 'javac ' . s:FileName[0:10]
