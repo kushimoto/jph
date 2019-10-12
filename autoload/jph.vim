@@ -22,7 +22,6 @@ function! jph#init()
 		echohl None
 		return 1
 	endif
-	return 0
 endfunction
 
 function! jph#main()
