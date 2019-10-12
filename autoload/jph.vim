@@ -1,29 +1,3 @@
-function! jph#init()
-
-	let Java19DirPath = $HOME . '/kadai/java19/lec\d\{1,2}'
-	let WorkingDirPath = s:FilePath[0:41]
-	if match(WorkingDirPath, Java19DirPath) == 0
-		if isdirectory('src') == 0
-			call mkdir('src')
-		endif
-		if isdirectory('junit') == 0
-			call mkdir('junit')
-			let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:4] . '*test.java' . ' junit/'
-			call system(GetDebugOnlyJavaFile)
-			if v:shell_error != 0
-				echohl ErrorMsg
-				echo '[ Error ] ' . s:FileName[0:4] . '*test.javaの取得に失敗しました'
-				echohl None
-			endif
-		endif
-	else
-		echohl ErrorMsg
-		echomsg '[ Error ] ~/kadai/java19/lecXX 以外の場所では使用できません'
-		echohl None
-		return 1
-	endif
-endfunction
-
 function! jph#main()
 
 	"開いているファイル名を取得
@@ -91,6 +65,32 @@ function! jph#main()
 				endif
 			endif
 		endif
+	endif
+endfunction
+
+function! jph#init()
+
+	let Java19DirPath = $HOME . '/kadai/java19/lec\d\{1,2}'
+	let WorkingDirPath = s:FilePath[0:41]
+	if match(WorkingDirPath, Java19DirPath) == 0
+		if isdirectory('src') == 0
+			call mkdir('src')
+		endif
+		if isdirectory('junit') == 0
+			call mkdir('junit')
+			let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:4] . '*test.java' . ' junit/'
+			call system(GetDebugOnlyJavaFile)
+			if v:shell_error != 0
+				echohl ErrorMsg
+				echo '[ Error ] ' . s:FileName[0:4] . '*test.javaの取得に失敗しました'
+				echohl None
+			endif
+		endif
+	else
+		echohl ErrorMsg
+		echomsg '[ Error ] ~/kadai/java19/lecXX 以外の場所では使用できません'
+		echohl None
+		return 1
 	endif
 endfunction
 
