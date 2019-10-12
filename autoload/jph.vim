@@ -1,4 +1,10 @@
 function! jph#checkDir()
+
+	"開いているファイル名を取得
+	let FileName = expand("%")
+	"フルパス取得(ファイル名含む)
+	let FilePath = expand("%:p")
+
 	let Java19DirPath = $HOME . 'kadai/java19/lec\d{1,2}'
 	let WorkingDirPath = FilePath[0:41]
 	if match(WorkingDirPath, Java19DirPath) == 0
@@ -24,6 +30,7 @@ function! jph#checkDir()
 endfunction
 
 function! jph#main()
+
 	"開いているファイル名を取得
 	let FileName = expand("%")
 	"フルパス取得(ファイル名含む)
