@@ -1,6 +1,6 @@
 function! jph#init()
 
-	let Java19DirPath = $HOME . '/kadai/java19/lec\d{1,2}'
+	let Java19DirPath = $HOME . "/kadai/java19/lec\d{1,2}"
 	echomsg Java19DirPath
 	let WorkingDirPath = s:FilePath[0:41]
 	echomsg WorkingDirPath
@@ -38,7 +38,7 @@ function! jph#main()
 	if jph#init() == 0
 
 		" カレントバッファが workYY.java かどうか確認
-		let WorkJavaFileName = 'work\d{1,2}\.java'
+		let WorkJavaFileName = "work\d{1,2}\.java"
 		if match(s:FileName, WorkJavaFileName) == 0
 			" javac コマンドを準備
 			let JavaCompile = 'javac ' . s:FileName[0:10]
