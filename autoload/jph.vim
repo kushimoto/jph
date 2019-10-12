@@ -25,7 +25,6 @@ function! jph#checkDir()
 		echohl ErrorMsg
 		echomsg '[ Error ] ~/kadai/java19/lecXX 以外の場所では使用できません'
 		echohl None
-		finish
 	endif
 endfunction
 
