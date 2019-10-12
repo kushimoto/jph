@@ -92,7 +92,6 @@ function! jph#main()
 			endif
 		endif
 	endif
-	call jph#initialCodeInsert()
 endfunction
 
 function! jph#initialCodeInsert()
