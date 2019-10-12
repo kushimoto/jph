@@ -6,7 +6,7 @@ let g:loaded_jph = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-if g:window_setting == 1
+if g:jph#window_setting == 1
 	autocmd VimEnter * execute 'syntax on'
 	autocmd VimEnter * execute 'sp'
 	autocmd VimEnter * execute 'terminal'
@@ -16,6 +16,7 @@ if g:window_setting == 1
 	autocmd VimEnter * call feedkeys("x", "n")
 endif
 
+autocmd BufRead,BufNewFile $HOME/kadai/java19/*/*.java call jph#initialCodeInsert()
 command! Jph call jph#main()
 
 let &cpo = s:save_cpo
