@@ -5,7 +5,7 @@ function! jph#checkDir()
 	"フルパス取得(ファイル名含む)
 	let FilePath = expand("%:p")
 
-	let Java19DirPath = $HOME . 'kadai/java19/lec\d{1,2}'
+	let Java19DirPath = $HOME . '/kadai/java19/lec\d{1,2}'
 	let WorkingDirPath = FilePath[0:41]
 	if match(WorkingDirPath, Java19DirPath) == 0
 		if isdirectory('src') == 0
