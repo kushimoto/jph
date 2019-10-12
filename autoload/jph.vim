@@ -1,3 +1,28 @@
+function! jph#checkDir()
+	let Java19DirPath = $HOME . 'kadai/java19/lec\d{1,2}'
+	let WorkingDirPath = FilePath[0:41]
+	if match(WorkingDirPath, Java19DirPath) == 0
+		if isdirectory('src') == 0
+			call mkdir('src')
+		endif
+		if isdirectory('junit') == 0
+			call mkdir('junit')
+			let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . FileName[0:4] . '*test.java' . ' junit/'
+			call system(GetDebugOnlyJavaFile)
+			if v:shell_error != 0
+				echohl ErrorMsg
+				echo '[ Error ] ' . FileName[0:4] . '*test.javaの取得に失敗しました'
+				echohl None
+			endif
+		endif
+	else
+		echohl ErrorMsg
+		echomsg '[ Error ] ~/kadai/java19/lecXX 以外の場所では使用できません'
+		echohl None
+		finish
+	endif
+endfunction
+
 function! jph#main()
 	"開いているファイル名を取得
 	let FileName = expand("%")
@@ -21,19 +46,8 @@ function! jph#main()
 		execute 'w'
 	else
 		" ~/kadai/java19/lecXX ディレクトリで実行されているかを確認
-		if FilePath[0:39] == '/home/students/e1n18030/kadai/java19/lec'
-			if isdirectory('src') == 0
-				call mkdir('src')
-			endif
-			if isdirectory('junit') == 0
-				call mkdir('junit')
-				let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . FileName[0:4] . '*test.java' . ' junit/'
-				call system(GetDebugOnlyJavaFile)
-				if v:shell_error != 0
-					echo '[ Error ] ' . FileName[0:4] . '*test.javaの取得に失敗しました'
-				endif
-			endif
-		endif
+		call jph#checkDir()
+		
 
 		" カレントバッファを簡易確認
 		if FileName[0:3] == 'work'
