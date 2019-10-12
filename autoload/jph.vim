@@ -1,7 +1,9 @@
 function! jph#init()
 
 	let Java19DirPath = $HOME . '/kadai/java19/lec\d{1,2}'
+	echomsg Java19DirPath
 	let WorkingDirPath = s:FilePath[0:41]
+	echomsg WorkingDirPath
 	if match(WorkingDirPath, Java19DirPath) == 0
 		if isdirectory('src') == 0
 			call mkdir('src')
