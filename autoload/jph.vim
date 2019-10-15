@@ -72,7 +72,7 @@ function! jph#main()
 					call feedkeys("i" . "\<CR>")
 					call feedkeys(JavaCompile . "\<CR>")
 					echohl ErrorMsg
-					echo '[ Error ] デバッグに失敗しました。'
+					echomsg '[ Error ] デバッグに失敗しました。'
 					echohl None
 				endif
 			endif
