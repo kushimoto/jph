@@ -63,9 +63,6 @@ function! jph#main()
 						endif
 					endif
 				else
-					echohl ErrorMsg
-					echo '[ Error ] デバッグに失敗しました。'
-					echohl None
 					execute 'normal gg'
 					execute 'normal dd'
 					execute 'w'
@@ -74,6 +71,9 @@ function! jph#main()
 					call feedkeys("j")
 					call feedkeys("i" . "\<CR>")
 					call feedkeys(JavaCompile . "\<CR>")
+					echohl ErrorMsg
+					echo '[ Error ] デバッグに失敗しました。'
+					echohl None
 				endif
 			endif
 		endif
