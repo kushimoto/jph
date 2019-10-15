@@ -62,6 +62,18 @@ function! jph#main()
 							echomsg '[ Success ] Deleted the file.'
 						endif
 					endif
+				else
+					echohl ErrorMsg
+					echo '[ Error ] デバッグに失敗しました。'
+					echohl None
+					execute 'normal gg'
+					execute 'normal dd'
+					execute 'w'
+					" ターミナルでわざとコンパイルしてエラー文を閲覧できるようにする
+					call feedkeys("\<C-w>")
+					call feedkeys("j")
+					call feedkeys("i" . "\<CR>")
+					call feedkeys(JavaCompile . "\<CR>")
 				endif
 			endif
 		endif
