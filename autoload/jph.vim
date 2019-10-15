@@ -22,6 +22,8 @@ function! jph#main()
 				call feedkeys("j")
 				call feedkeys("i" . "\<CR>")
 				call feedkeys(JavaCompile . "\<CR>")
+					call feedkeys("\<C-\>")
+					call feedkeys("\<C-n>" . "\<CR>")
 			else
 				" 先頭の行に飛ぶ
 				execute 'normal gg'
@@ -71,6 +73,8 @@ function! jph#main()
 					call feedkeys("j")
 					call feedkeys("i" . "\<CR>")
 					call feedkeys(JavaCompile . "\<CR>")
+					call feedkeys("\<C-\>")
+					call feedkeys("\<C-n>" . "\<CR>")
 					echohl ErrorMsg
 					echomsg '[ Error ] デバッグに失敗しました。'
 					echohl None
