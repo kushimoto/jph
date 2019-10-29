@@ -11,9 +11,9 @@ function! jph#main()
 	elseif match(s:FileName, RevJavaFileName) == 0 
 		let RevFlag = 1		
 	endif
-		" カレントバッファが workYY.java かどうか確認
-		let WorkJavaFileName = 'work\d\{1,2}\.java'
-		let RevJavaFileName = 'Rev\d\{1,2}\.java'
+	" カレントバッファが workYY.java かどうか確認
+	let WorkJavaFileName = 'work\d\{1,2}\.java'
+	let RevJavaFileName = 'Rev\d\{1,2}\.java'
 	" 必要なディレクトリなどを準備する
 	if jph#init() == 0
 		
@@ -112,6 +112,20 @@ function! jph#main()
 endfunction
 
 function! jph#init()
+	"開いているファイル名を取得
+	let s:FileName = expand("%")
+	"フルパス取得(ファイル名含む)
+	let s:FilePath = expand("%:p")
+	let WorkFlag = 0
+	let RevFlag = 0
+	if match(s:FileName, WorkJavaFileName) == 0
+		let WorkFlag = 1
+	elseif match(s:FileName, RevJavaFileName) == 0 
+		let RevFlag = 1		
+	endif
+	" カレントバッファが workYY.java かどうか確認
+	let WorkJavaFileName = 'work\d\{1,2}\.java'
+	let RevJavaFileName = 'Rev\d\{1,2}\.java'
 
 	let Java19DirPath = $HOME . '/kadai/java19/lec\d\{1,2}'
 	if WorkFlag == 1
