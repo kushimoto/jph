@@ -1,5 +1,4 @@
 function! jph#main()
-		echomsg 'W' = WorkFlag
 
 	"開いているファイル名を取得
 	let s:FileName = expand("%")
