@@ -161,6 +161,9 @@ function! jph#init()
 	else
 		echohl ErrorMsg
 		echomsg '[ Error ] ~/kadai/java19/lecXX 以外の場所では使用できません'
+		echomsg WorkingDirPath . '!=' . Java19DirPath 
+		echomsg 'W' = WorkFlag
+		echomsg 'R' = RevFlag
 		echohl None
 		return 1
 	endif
