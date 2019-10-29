@@ -129,6 +129,7 @@ function! jph#init()
 	endif
 	
 	let Java19DirPath = $HOME . '/kadai/java19/lec\d\{1,2}'
+	let WorkingDirPath = 'path'
 	if WorkFlag == 1
 		let WorkingDirPath = s:FilePath[0:len(s:FilePath) - 13]
 	elseif RevFlag == 1
