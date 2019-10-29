@@ -4,18 +4,19 @@ function! jph#main()
 	let s:FileName = expand("%")
 	"フルパス取得(ファイル名含む)
 	let s:FilePath = expand("%:p")
-
-	" 必要なディレクトリなどを準備する
-	if jph#init() == 0
-
+	let WorkFlag = 0
+	let RevFlag = 0
+	if match(s:FileName, WorkJavaFileName) == 0
+		let WorkFlag = 1
+	elseif match(s:FileName, RevJavaFileName) == 0 
+		let RevFlag = 1		
+	endif
 		" カレントバッファが workYY.java かどうか確認
 		let WorkJavaFileName = 'work\d\{1,2}\.java'
 		let RevJavaFileName = 'Rev\d\{1,2}\.java'
-		if match(s:FileName, WorkJavaFileName) == 0
-			let WorkFlag = 1
-		elseif match(s:FileName, RevJavaFileName) == 0 
-			let RevFlag = 1		
-		endif
+	" 必要なディレクトリなどを準備する
+	if jph#init() == 0
+		
 		if WorkFlag == 1 || RevFlag == 1
 			" javac コマンドを準備
 			let JavaCompile = 'javac ' . s:FileName
@@ -112,19 +113,6 @@ endfunction
 
 function! jph#init()
 
-	"開いているファイル名を取得
-	let s:FileName = expand("%")
-	"フルパス取得(ファイル名含む)
-	let s:FilePath = expand("%:p")
-
-	let WorkJavaFileName = 'work\d\{1,2}\.java'
-	let RevJavaFileName = 'Rev\d\{1,2}\.java'
-	if match(s:FileName, WorkJavaFileName) == 0
-		let WorkFlag = 1
-	elseif match(s:FileName, RevJavaFileName) == 0 
-		let RevFlag = 1		
-	endif
-
 	let Java19DirPath = $HOME . '/kadai/java19/lec\d\{1,2}'
 	if WorkFlag == 1
 		let WorkingDirPath = s:FilePath[0:len(s:FilePath) - 13]
@@ -170,6 +158,8 @@ function! jph#initialCodeInsert()
 	let s:FilePath = expand("%:p")
 	let WorkJavaFileName = 'work\d\{1,2}\.java'
 	let RevJavaFileName = 'Rev\d\{1,2}\.java'
+	let WorkFlag = 0
+	let RevFlag = 0		
 	if match(s:FileName, WorkJavaFileName) == 0
 		let WorkFlag = 1
 	elseif match(s:FileName, RevJavaFileName) == 0 
