@@ -1,4 +1,5 @@
 function! jph#main()
+		echomsg 'W' = WorkFlag
 
 	"開いているファイル名を取得
 	let s:FileName = expand("%")
@@ -8,7 +9,7 @@ function! jph#main()
 	let RevFlag = 0
 	" カレントバッファが workYY.java かどうか確認
 	let WorkJavaFileName = 'work\d\{1,2}\.java'
-	let RevJavaFileName = 'Rev\d\{1,2}\.java'
+	let RevJavaFileName = 'rev\d\{1,2}\.java'
 	if match(s:FileName, WorkJavaFileName) == 0
 		let WorkFlag = 1
 	elseif match(s:FileName, RevJavaFileName) == 0 
@@ -120,7 +121,7 @@ function! jph#init()
 	let RevFlag = 0
 	" カレントバッファが workYY.java かどうか確認
 	let WorkJavaFileName = 'work\d\{1,2}\.java'
-	let RevJavaFileName = 'Rev\d\{1,2}\.java'
+	let RevJavaFileName = 'rev\d\{1,2}\.java'
 
 	if match(s:FileName, WorkJavaFileName) == 0
 		let WorkFlag = 1
@@ -161,9 +162,7 @@ function! jph#init()
 	else
 		echohl ErrorMsg
 		echomsg '[ Error ] ~/kadai/java19/lecXX 以外の場所では使用できません'
-		echomsg WorkingDirPath . '!=' . Java19DirPath 
-		echomsg 'W' = WorkFlag
-		echomsg 'R' = RevFlag
+		echomsg '[ Error ] 'WorkingDirPath . '不一致' . Java19DirPath 
 		echohl None
 		return 1
 	endif
@@ -176,7 +175,7 @@ function! jph#initialCodeInsert()
 	"フルパス取得(ファイル名含む)
 	let s:FilePath = expand("%:p")
 	let WorkJavaFileName = 'work\d\{1,2}\.java'
-	let RevJavaFileName = 'Rev\d\{1,2}\.java'
+	let RevJavaFileName = 'rev\d\{1,2}\.java'
 	let WorkFlag = 0
 	let RevFlag = 0		
 	if match(s:FileName, WorkJavaFileName) == 0
