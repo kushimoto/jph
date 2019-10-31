@@ -45,29 +45,20 @@ function! jph#main()
 				" workYY.java or revYY.java を srcディレクトリへコピーするコマンドを準備
 				let CopyJavaFileToSRC = 'cp ' . s:FileName . ' src/'
 				" workYY.java の デバッグに必要なファイルを失敬するコマンドの準備(len は 0から数えていることに注意)
-				if WorkFlag == 1
-					let GetJunitSh = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 6] . 'test.sh' . ' ./'
-				elseif RevFlag == 1
-					let GetJunitSh = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 5] . 'test.sh' . ' ./'
-				endif
+				let GetJunitSh = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 6] . 'test.sh' . ' ./'
 				" システムコマンドをそれぞれ実行
 				call system(CopyJavaFileToSRC)
 				call system(GetJunitSh)
 				" デバッグ用のスクリプトファイルを実行するコマンドを準備
-				if WorkFlag == 1
-					let JunitSh = 'sh ' . s:FileName[0:len(s:FileName) - 6] . 'test.sh'
-				elseif RevFlag == 1
-					let JunitSh = 'sh ' . s:FileName[0:len(s:FileName) - 5] . 'test.sh'
-				endif
+				let JunitSh = 'sh ' . s:FileName[0:len(s:FileName) - 6] . 'test.sh'
 				" システムコマンドを実行、デバッグ結果を変数に格納する
 				let OutPut = system(JunitSh)
 				" 出力が70文字以下なら問題はないだろうという判断を下す
 				if len(OutPut) <= 70
+					let FindObject = s:FileName[0:len(s:FileName) - 6] . 'test.txt'
 					if WorkFlag == 1
-						let FindObject = s:FileName[0:len(s:FileName) - 6] . 'test.txt'
 						let FindPath = s:FilePath[0:len(s:FilePath) - 12] 
 					elseif RevFlag == 1
-						let FindObject = s:FileName[0:len(s:FileName) - 5] . 'test.txt'
 						let FindPath = s:FilePath[0:len(s:FilePath) - 11] 
 					endif
 					if findfile(FindObject, FindPath) == FindObject
@@ -83,15 +74,10 @@ function! jph#main()
 						call feedkeys("j")
 						call feedkeys("i" . "\<CR>")
 						call feedkeys(JavaCompile . "\<CR>")
-						if WorkFlag == 1
-							if delete(s:FileName[0:len(s:FileName) - 6] . 'test.sh') == 0
-								echomsg '[ Success ] Deleted the file.'
-							endif
-						elseif RevFlag == 1
-							if delete(s:FileName[0:len(s:FileName) - 5] . 'test.sh') == 0
-								echomsg '[ Success ] Deleted the file.'
-							endif
+						if delete(s:FileName[0:len(s:FileName) - 6] . 'test.sh') == 0
+							echomsg '[ Success ] Deleted the file.'
 						endif
+
 					endif
 				else
 					execute 'normal gg'
@@ -145,19 +131,11 @@ function! jph#init()
 		endif
 		if isdirectory('junit') == 0
 			call mkdir('junit')
-			if WorkFlag == 1
-				let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:4] . '*test.java' . ' junit/'
-			elseif RevFlag == 1
-				let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:3] . '*test.java' . ' junit/'
-			endif
+			let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 6] . '*test.java' . ' junit/'
 			call system(GetDebugOnlyJavaFile)
 			if v:shell_error != 0
 				echohl ErrorMsg
-				if WorkFlag == 1
-					echo '[ Error ] ' . s:FileName[0:4] . '*test.javaの取得に失敗しました'
-				elseif RevFlag == 1
-					echo '[ Error ] ' . s:FileName[0:3] . '*test.javaの取得に失敗しました'
-				endif
+				echo '[ Error ] ' . s:FileName[0:len(s:FileName) - 6] . '*test.javaの取得に失敗しました'
 				echohl None
 			endif
 		endif
@@ -176,27 +154,12 @@ function! jph#initialCodeInsert()
 	let s:FileName = expand("%")
 	"フルパス取得(ファイル名含む)
 	let s:FilePath = expand("%:p")
-	" 復習問題と課題を区別するためのフラグ
-	let WorkFlag = 0
-	let RevFlag = 0
-	" カレントバッファが workYY.java or revYY.java かどうか確認
-	let WorkJavaFileName = 'work..\.java'
-	let RevJavaFileName = 'rev..\.java'
-	if match(s:FileName, WorkJavaFileName) == 0
-		let WorkFlag = 1
-	elseif match(s:FileName, RevJavaFileName) == 0 
-		let RevFlag = 1		
-	endif
 
 	" 新規ファイルの場合バッファしか存在せずファイル容量の確認ができないので保存して誤作動をさける。
 	execute 'w'
 
 	if getfsize(s:FilePath) == 0
-		if WorkFlag == 1
-			let ClassName = 'class ' . s:FileName[0:5] . ' {'
-		elseif RevFlag == 1
-			let ClassName = 'class ' . s:FileName[0:4] . ' {'
-		endif
+		let ClassName = 'class ' . s:FileName[0:len(s:FileName) - 6] . ' {'
 		call append(0, 'import java.io.*;')
 		call append(2, ClassName)
 		call append(3, '	public static void main (String[] args) throws IOException')
