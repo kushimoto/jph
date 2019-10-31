@@ -131,12 +131,13 @@ function! jph#init()
 		let RevFlag = 1		
 	endif
 	
-	let Java19DirPath = $HOME . '/kadai/java19/lec\d\{1,2}'
 	if WorkFlag == 1
 		let WorkingDirPath = s:FilePath[0:len(s:FilePath) - 13]
 	elseif RevFlag == 1
 		let WorkingDirPath = s:FilePath[0:len(s:FilePath) - 12]
 	endif
+
+	let Java19DirPath = $HOME . '/kadai/java19/lec..'
 
 	if match(WorkingDirPath, Java19DirPath) == 0
 		if isdirectory('src') == 0
@@ -144,11 +145,11 @@ function! jph#init()
 		endif
 		if isdirectory('junit') == 0
 			call mkdir('junit')
-		if WorkFlag == 1
-			let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:4] . '*test.java' . ' junit/'
-		elseif RevFlag == 1
-			let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:3] . '*test.java' . ' junit/'
-		endif
+			if WorkFlag == 1
+				let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:4] . '*test.java' . ' junit/'
+			elseif RevFlag == 1
+				let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:3] . '*test.java' . ' junit/'
+			endif
 			call system(GetDebugOnlyJavaFile)
 			if v:shell_error != 0
 				echohl ErrorMsg
