@@ -132,11 +132,11 @@ function! jph#init()
 		if isdirectory('junit') == 0
 			call mkdir('junit')
 		endif
-		let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 7] . '*test.java' . ' junit/'
+		let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 6] . 'test.java' . ' junit/'
 		call system(GetDebugOnlyJavaFile)
 		if v:shell_error != 0
 			echohl ErrorMsg
-			echo '[ Error ] ' . s:FileName[0:len(s:FileName) - 8] . '*test.javaの取得に失敗しました'
+			echo '[ Error ] ' . s:FileName[0:len(s:FileName) - 6] . 'test.javaの取得に失敗しました'
 			echohl None
 		endif
 
