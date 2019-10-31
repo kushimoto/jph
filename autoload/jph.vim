@@ -131,14 +131,15 @@ function! jph#init()
 		endif
 		if isdirectory('junit') == 0
 			call mkdir('junit')
-			let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 8] . '*test.java' . ' junit/'
-			call system(GetDebugOnlyJavaFile)
-			if v:shell_error != 0
-				echohl ErrorMsg
-				echo '[ Error ] ' . s:FileName[0:len(s:FileName) - 8] . '*test.javaの取得に失敗しました'
-				echohl None
-			endif
 		endif
+		let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 8] . '*test.java' . ' junit/'
+		call system(GetDebugOnlyJavaFile)
+		if v:shell_error != 0
+			echohl ErrorMsg
+			echo '[ Error ] ' . s:FileName[0:len(s:FileName) - 8] . '*test.javaの取得に失敗しました'
+			echohl None
+		endif
+
 	else
 		echohl ErrorMsg
 		echomsg '[ Error ] ~/kadai/java19/lecXX 以外の場所では使用できません'
