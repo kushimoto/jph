@@ -70,7 +70,7 @@ function! jph#main()
 						let FindObject = s:FileName[0:len(s:FileName) - 5] . 'test.txt'
 						let FindPath = s:FilePath[0:len(s:FilePath) - 11] 
 					endif
-					if findfile(FindObject, ) == FindObject
+					if findfile(FindObject, FindPath) == FindObject
 						echomsg '[ Success ] I think no problems.'
 						let CopyJavaFileToCurrentDir = 'cp src/' . s:FileName . ' ' . s:FileName 
 						call system(CopyJavaFileToCurrentDir)
