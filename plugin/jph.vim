@@ -18,6 +18,7 @@ endif
 
 autocmd BufRead,BufNewFile $HOME/kadai/java19/*/*.java call jph#initialCodeInsert()
 command! Jph call jph#main()
+command! Get call jph#init()
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
