@@ -1,27 +1,39 @@
+" 変数リスト
+" s:CurrentFName -> Current File Name ... neovimで開いているファイルの名前
+" s:CurrentFPath -> Current File Path ... neovimで開いているファイルのフルパス
+
 function! jph#main()
 
-	"開いているファイル名を取得
-	let s:FileName = expand("%")
-	"フルパス取得(ファイル名含む)
-	let s:FilePath = expand("%:p")
-	" 復習問題と課題を区別するためのフラグ
+	" 現在編集中のファイルの名前を変数に代入
+	let s:CurrentFName = expand("%")
+
+	" 現在編集中のファイルのフルパスを変数に代入（ファイル名を含む）
+	let s:CurrentFPath = expand("%:p")
+
+	" WorkYY.java RevYY.java を区別するためのフラグ変数
 	let WorkFlag = 0
 	let RevFlag = 0
-	" カレントバッファが workYY.java or revYY.java かどうか確認
-	let WorkJavaFileName = 'work..\.java'
-	let RevJavaFileName = 'rev..\.java'
-	if match(s:FileName, WorkJavaFileName) == 0
+
+	" 課題ファイルを確認するための簡易的な正規表現の代入
+	let WorkJavaFName = 'work..\.java'
+	let RevJavaFName = 'rev..\.java'
+
+	" カレントファイルが WorkXX.java なら
+	if match(s:CurrentFName, WorkJavaFName) == 0
+		" WorkFlag に 1 をたてる
 		let WorkFlag = 1
-	elseif match(s:FileName, RevJavaFileName) == 0 
+	" カレントファイルが RevXX.java なら
+	elseif match(s:CurrentFName, RevJavaFName) == 0  
+		" RevFlag に 1 をたてる
 		let RevFlag = 1		
 	endif
 
-	" 必要なディレクトリなどを準備する
+	" junit/ src/ を準備し、各種ファイルのコピーを行う。成功すれば中の処理に入る
 	if jph#init() == 0
-		
+		" 課題ファイルが編集中であることが確認できれば中の処理を実行する
 		if WorkFlag == 1 || RevFlag == 1
 			" javac コマンドを準備
-			let JavaCompile = 'javac ' . s:FileName
+			let JavaCompile = 'javac ' . s:CurrentFName
 			" javac コマンドを実行して、出力を変数に格納
 			let OutPut = system(JavaCompile)
 			" 出力があった＝コンパイルエラー　と判断する
@@ -43,39 +55,46 @@ function! jph#main()
 					execute 'w'
 				endif
 				" workYY.java or revYY.java を srcディレクトリへコピーするコマンドを準備
-				let CopyJavaFileToSRC = 'cp ' . s:FileName . ' src/'
-				" workYY.java の デバッグに必要なファイルを失敬するコマンドの準備(len は 0から数えていることに注意)
-				let GetJunitSh = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 6] . 'test.sh' . ' ./'
+				let CopyJavaFileToSRC = 'cp ' . s:CurrentFName . ' src/'
+				" workYY.java or revYY.java の デバッグに必要なファイルを失敬するコマンドの準備(len は 0から数えていることに注意)
+				let GetJunitSh = 'cp /home/teachers/skeleton/INjava/' . s:CurrentFName[0:len(s:CurrentFName) - 6] . 'test.sh' . ' ./'
 				" システムコマンドをそれぞれ実行
 				call system(CopyJavaFileToSRC)
 				call system(GetJunitSh)
 				" デバッグ用のスクリプトファイルを実行するコマンドを準備
-				let JunitSh = 'sh ' . s:FileName[0:len(s:FileName) - 6] . 'test.sh'
+				let JunitSh = 'sh ' . s:CurrentFName[0:len(s:CurrentFName) - 6] . 'test.sh'
 				" システムコマンドを実行、デバッグ結果を変数に格納する
 				let OutPut = system(JunitSh)
 				" 出力が70文字以下なら問題はないだろうという判断を下す
 				if len(OutPut) <= 70
-					let FindObject = s:FileName[0:len(s:FileName) - 6] . 'test.txt'
+					" 検索対象のファイル名を変数に代入（検索対象のファイルはデバッグの結果が書かれたファイル）
+					let FindObject = s:CurrentFName[0:len(s:CurrentFName) - 6] . 'test.txt'
 					if WorkFlag == 1
-						let FindPath = s:FilePath[0:len(s:FilePath) - 12] 
+						" 検索対象のファイルが置かれているはずのパスを変数に代入
+						let FindPath = s:CurrentFPath[0:len(s:CurrentFPath) - 12] 
 					elseif RevFlag == 1
-						let FindPath = s:FilePath[0:len(s:FilePath) - 11] 
+						" 検索対象のファイルが置かれているはずのパスを変数に代入
+						let FindPath = s:CurrentFPath[0:len(s:CurrentFPath) - 11] 
 					endif
+					" 検索対象のファイルを検索
 					if findfile(FindObject, FindPath) == FindObject
-						echomsg '[ Success ] I think no problems.'
-						let CopyJavaFileToCurrentDir = 'cp src/' . s:FileName . ' ' . s:FileName 
+						echomsg '[ Success ] Debug is no problem.'
+						" デバッグの完了したソースファイルを src/ にコピーするためのコマンドを準備
+						let CopyJavaFileToCurrentDir = 'cp src/' . s:CurrentFName . ' ' . s:CurrentFName
 						call system(CopyJavaFileToCurrentDir)
 						execute 'e!'
 						execute 'normal gg'
 						execute 'normal dd'
 						execute 'w'
-						let JavaCompile = 'javac ' . s:FileName
+						" デバッグ完了後のファイルをコンパイルするコマンドを準備する
+						let JavaCompile = 'javac ' . s:CurrentFName
 						call feedkeys("\<C-w>")
 						call feedkeys("j")
 						call feedkeys("i" . "\<CR>")
 						call feedkeys(JavaCompile . "\<CR>")
-						if delete(s:FileName[0:len(s:FileName) - 6] . 'test.sh') == 0
-							echomsg '[ Success ] Deleted the file.'
+						" デバッグに用いたスクリプトファイルを削除
+						if delete(s:CurrentFName[0:len(s:CurrentFName) - 6] . 'test.sh') == 0
+							echomsg '[ Success ] Deleting script file for debug is done.'
 						endif
 
 					endif
@@ -91,7 +110,7 @@ function! jph#main()
 					call feedkeys("\<C-\>")
 					call feedkeys("\<C-n>" . "\<CR>")
 					echohl ErrorMsg
-					echomsg '[ Error ] デバッグに失敗しました。'
+					echomsg '[ Error ] Debug failed.'
 					echohl None
 				endif
 			endif
@@ -102,25 +121,25 @@ endfunction
 function! jph#init()
 
 	"開いているファイル名を取得
-	let s:FileName = expand("%")
+	let s:CurrentFName = expand("%")
 	"フルパス取得(ファイル名含む)
-	let s:FilePath = expand("%:p")
+	let s:CurrentFPath = expand("%:p")
 	" 復習問題と課題を区別するためのフラグ
 	let WorkFlag = 0
 	let RevFlag = 0
 	" カレントバッファが workYY.java or revYY.java かどうか確認
-	let WorkJavaFileName = 'work..\.java'
-	let RevJavaFileName = 'rev..\.java'
-	if match(s:FileName, WorkJavaFileName) == 0
+	let WorkJavaFName = 'work..\.java'
+	let RevJavaFName = 'rev..\.java'
+	if match(s:CurrentFName, WorkJavaFName) == 0
 		let WorkFlag = 1
-	elseif match(s:FileName, RevJavaFileName) == 0 
+	elseif match(s:CurrentFName, RevJavaFName) == 0 
 		let RevFlag = 1		
 	endif
 	
 	if WorkFlag == 1
-		let WorkingDirPath = s:FilePath[0:len(s:FilePath) - 13]
+		let WorkingDirPath = s:CurrentFPath[0:len(s:CurrentFPath) - 13]
 	elseif RevFlag == 1
-		let WorkingDirPath = s:FilePath[0:len(s:FilePath) - 12]
+		let WorkingDirPath = s:CurrentFPath[0:len(s:CurrentFPath) - 12]
 	endif
 
 	let Java19DirPath = $HOME . '/kadai/java19/lec..'
@@ -132,18 +151,17 @@ function! jph#init()
 		if isdirectory('junit') == 0
 			call mkdir('junit')
 		endif
-		let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:FileName[0:len(s:FileName) - 6] . 'test.java' . ' junit/'
+		let GetDebugOnlyJavaFile = 'cp /home/teachers/skeleton/INjava/' . s:CurrentFName[0:len(s:CurrentFName) - 6] . 'test.java' . ' junit/'
 		call system(GetDebugOnlyJavaFile)
 		if v:shell_error != 0
 			echohl ErrorMsg
-			echo '[ Error ] ' . s:FileName[0:len(s:FileName) - 6] . 'test.javaの取得に失敗しました'
+			echo "[ Error ] Get '" . s:CurrentFName[0:len(s:CurrentFName) - 6] . "test.java' failed."
 			echohl None
 		endif
 
 	else
 		echohl ErrorMsg
-		echomsg '[ Error ] ~/kadai/java19/lecXX 以外の場所では使用できません'
-		echomsg '[ Error ] 'WorkingDirPath . '不一致' . Java19DirPath 
+		echomsg "[ Error ] Current directory must be '~/kadai/java19/lecXX'."
 		echohl None
 		return 1
 	endif
@@ -152,15 +170,15 @@ endfunction
 function! jph#initialCodeInsert()
 
 	"開いているファイル名を取得
-	let s:FileName = expand("%")
+	let s:CurrentFName = expand("%")
 	"フルパス取得(ファイル名含む)
-	let s:FilePath = expand("%:p")
+	let s:CurrentFPath = expand("%:p")
 
 	" 新規ファイルの場合バッファしか存在せずファイル容量の確認ができないので保存して誤作動をさける。
 	execute 'w'
 
-	if getfsize(s:FilePath) == 0
-		let ClassName = 'class ' . s:FileName[0:len(s:FileName) - 6] . ' {'
+	if getfsize(s:CurrentFPath) == 0
+		let ClassName = 'class ' . s:CurrentFName[0:len(s:CurrentFName) - 6] . ' {'
 		call append(0, 'import java.io.*;')
 		call append(2, ClassName)
 		call append(3, '	public static void main (String[] args) throws IOException')
