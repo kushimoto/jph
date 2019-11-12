@@ -112,6 +112,7 @@ function! jph#main()
 					echohl ErrorMsg
 					echomsg '[ Error ] Debug failed.'
 					echohl None
+					execute 'messages'
 				endif
 			endif
 		endif
@@ -157,12 +158,14 @@ function! jph#init()
 			echohl ErrorMsg
 			echo "[ Error ] Get '" . s:CurrentFName[0:len(s:CurrentFName) - 6] . "test.java' failed."
 			echohl None
+			execute 'messages'
 		endif
 
 	else
 		echohl ErrorMsg
 		echomsg "[ Error ] Current directory must be '~/kadai/java19/lecXX'."
 		echohl None
+		execute 'messages'
 		return 1
 	endif
 endfunction
